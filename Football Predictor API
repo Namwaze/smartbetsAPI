@@ -1,0 +1,80 @@
+import numpy as np
+
+# Function to calculate average goals scored and conceded
+def calculate_averages(goals_scored, goals_conceded):
+    avg_scored = np.mean(goals_scored)
+    avg_conceded = np.mean(goals_conceded)
+    return avg_scored, avg_conceded
+
+# Function to predict the match result and recommend over/under 2.5 goals
+def predict_match(home_team, away_team, home_scores, home_conceded, away_scores, away_conceded):
+    # Calculate averages
+    home_avg_scored, home_avg_conceded = calculate_averages(home_scores, home_conceded)
+    away_avg_scored, away_avg_conceded = calculate_averages(away_scores, away_conceded)
+    
+    # Predict total goals
+    predicted_total_goals = (home_avg_scored + away_avg_scored + home_avg_conceded + away_avg_conceded) / 2
+    
+    # Predict match result
+    home_expected_goals = (home_avg_scored + away_avg_conceded) / 2
+    away_expected_goals = (away_avg_scored + home_avg_conceded) / 2
+    
+    if home_expected_goals > away_expected_goals:
+        match_result = f"{home_team} Win"
+    elif home_expected_goals < away_expected_goals:
+        match_result = f"{away_team} Win"
+    else:
+        match_result = "Draw"
+    
+    # Recommend over/under 2.5 goals
+    if predicted_total_goals > 2.5:
+        goals_recommendation = "Over 2.5 goals"
+    else:
+        goals_recommendation = "Under 2.5 goals"
+    
+    return match_result, predicted_total_goals, goals_recommendation
+
+# Main program
+def main():
+    print("⚽️ FOOTBALL MATCH PREDICTOR ⚽️")
+    
+    # Input team names
+    home_team = input("ENTER HOME TEAM NAME: ")
+    away_team = input("ENTER AWAY TEAM NAME: ")
+    
+    print("=======================================")
+    
+    # Input home team match statistics
+    home_scores = []
+    home_conceded = []
+    for i in range(1, 6):
+        home_scored = int(input(f"Enter Home Team Match {i} Goals Scored: "))
+        home_conceded_score = int(input(f"Enter Home Team Match {i} Goals Conceded: "))
+        home_scores.append(home_scored)
+        home_conceded.append(home_conceded_score)
+    
+    print("=======================================")
+    
+    # Input away team match statistics
+    away_scores = []
+    away_conceded = []
+    for i in range(1, 6):
+        away_scored = int(input(f"Enter Away Team Match {i} Goals Scored: "))
+        away_conceded_score = int(input(f"Enter Away Team Match {i} Goals Conceded: "))
+        away_scores.append(away_scored)
+        away_conceded.append(away_conceded_score)
+    
+    print("=======================================")
+    
+    # Predict and provide recommendation
+    match_result, predicted_goals, goals_recommendation = predict_match(home_team, away_team, home_scores, home_conceded, away_scores, away_conceded)
+    
+    print("MATCH PREDICTION")
+    print("=======================================")
+    print(f"Predicted Match Result: {match_result}")
+    print(f"Predicted Total Goals: {predicted_goals:.2f}")
+    print(f"Recommendation: {goals_recommendation}")
+    print("=======================================")
+
+if __name__ == "__main__":
+    main(
